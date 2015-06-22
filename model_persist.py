@@ -2,7 +2,6 @@ import ConfigParser, os, time
 import sklearn
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.externals import joblib
-from learn import wrangle, printers, nlp
 from sklearn import linear_model, svm, tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
