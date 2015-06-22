@@ -17,13 +17,13 @@ __author__ = 'Aaron J. Masino'
 #SET A RANDOM SEED FOR REPEATABLE RESULTS
 seed = 987654321
 
-def load_linearSVC(config,section):
+def load_linearSVC(config, section):
     c = 1.0
     if config.has_option(section,'C'):
         c = float(config.get(section,'C'))
     return svm.LinearSVC(tol=1e-6, C=c)
 
-def load_gaussianSVC(config,section):
+def load_gaussianSVC(config, section):
     c = 1.0
     gamma = 0.0
     if config.has_option(section,'C'):
@@ -32,7 +32,7 @@ def load_gaussianSVC(config,section):
         gamma = float(config.get(section,'gamma'))
     return svm.SVC(tol=1e-6, C=c, kernel='rbf', gamma=gamma)
 
-def load_decisionTree(config,section):
+def load_decisionTree(config, section):
     max_depth = None
     if config.has_option(section, 'max_depth'):
         max_depth = config.getint(section, 'max_depth')
@@ -150,22 +150,22 @@ if __name__ == '__main__':
     print 'loading configuration file .........'
     # load the configuration
     config_path = 'resources/config/models.ini'
-    config = ConfigParser.ConfigParser()
-    config.read(config_path)
+    configuration = ConfigParser.ConfigParser()
+    configuration.read(config_path)
 
     # instantiate, train, evaluate, & persist region models
     for key in region_keys:
         #load the vectorizer
         print 'loading vectorizer for {0} region .............'.format(key)
-        vectorizer = load_vectorizer(config, '{0}_vectorizer'.format(key))
+        vectorizer = load_vectorizer(configuration, '{0}_vectorizer'.format(key))
 
         print 'loading classifier for {0} region .............'.format(key)
         #load the classifier
-        classifier = load_classifier(config, '{0}_classifier'.format(key))
+        classifier = load_classifier(configuration, '{0}_classifier'.format(key))
 
         #create pipeline
         print 'fitting pipeline for {0} region ........'.format(key)
-        pipeline = build_pipeline(vectorizer, classifier,config,'{0}_classifier'.format(key))
+        pipeline = build_pipeline(vectorizer, classifier,configuration,'{0}_classifier'.format(key))
         pipeline.fit_transform(train_reports, train_labels[key])
 
         print 'Training and evaluating {0} region pipeline ...........'.format(key)
