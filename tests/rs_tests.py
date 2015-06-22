@@ -10,7 +10,7 @@ class RSTestCase(unittest.TestCase):
 
     def setUp(self):
         rs.app.config['TESTING'] = True
-        rs.configure_service('tests/test_config.cfg')
+        rs.configure_service('resources/config/test_config.cfg')
         self.app = rs.app.test_client()
 
     def tearDown(self):

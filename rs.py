@@ -24,14 +24,16 @@ def configure_service(config_file):
 @app.route('/classify', methods=['POST'])
 def classify():
     data = request.get_json()
+    inner_clf = joblib.load(app.config['INNER_PKL'])
     if data:
         rd = {}
         for pid,text in data.items():
             #classify text
             inner = inner_clf.predict(text)[0]
+            print type(inner_clf)
             rd[pid] = (inner,1,1,0)
     return json.dumps(rd)
 
 if __name__ == '__main__':
-    configure_service('app_config.cfg')
+    configure_service('resources/config/app_config.cfg')
     app.run()

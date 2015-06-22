@@ -109,14 +109,6 @@ if __name__ == '__main__':
                         'vect__analyzer':('word', 'char_wb')})
         })
 
-    feature_parameters  = {'vect__binary':(False, True)}
-
-    classifiers = ({
-        'logistic_regression':(linear_model.LogisticRegression(),
-                               use_spare_array,
-                               concatenate(feature_parameters, {'clf__C': [1/x for x in [1.0, 3.0]]}))
-        })
-
 
     #analyze model performance for classifiers X regions
     #WARNING: This may run for hours (or even days) depending on the number of classifiers
