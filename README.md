@@ -1,5 +1,4 @@
-# arrc
-AudgenDB radiology report text classification and REST service
+**A**udgenDB **R**adiology **R**eport **C**lassification (arrc)
 
 ## Model Selection
 The [*model_analysis.py*](https://github.com/chop-dbhi/arrc/blob/master/model_analysis.py) file analyizes a number of classification models using the [scikit-learn API](http://scikit-learn.org/stable/) and the [NLTK API](http://www.nltk.org/). It performs a grid search over several model hyper-parameters applying k-fold cross validation to select the best models. Performance is subsequently evaluated on a hold-out test set. 
