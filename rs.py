@@ -31,15 +31,14 @@ def configure_service(config_file):
 @app.route('/classify', methods=['POST'])
 def classify():
     data = request.get_json()
-    inner_clf = joblib.load(app.config['INNER_PKL'])
     if data:
         rd = {}
         for pid,text in data.items():
             #classify text
-            inner = __inner_clf__.predict(text)[0]
-            middle = __middle_clf__.predict(text)[0]
-            outer = __outer_clf__.predict(text)[0]
-            mastoid = __mastoid_clf__.predict(text)[0]
+            inner = __inner_clf__.predict([text])[0]
+            middle = __middle_clf__.predict([text])[0]
+            outer = __outer_clf__.predict([text])[0]
+            mastoid = __mastoid_clf__.predict([text])[0]
             rd[pid] = (inner,middle, outer, mastoid)
     return json.dumps(rd)
 

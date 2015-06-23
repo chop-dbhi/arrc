@@ -15,7 +15,7 @@ from learn import wrangle, printers, nlp
 __author__ = 'Aaron J. Masino'
 
 #SET A RANDOM SEED FOR REPEATABLE RESULTS
-seed = 987654321
+__seed__ = 987654321
 
 def load_linearSVC(config, section):
     c = 1.0
@@ -36,7 +36,7 @@ def load_decisionTree(config, section):
     max_depth = None
     if config.has_option(section, 'max_depth'):
         max_depth = config.getint(section, 'max_depth')
-    return tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed), max_depth=max_depth)
+    return tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(__seed__), max_depth=max_depth)
 
 def load_randomForestClassifier(config, section):
     max_depth = None
@@ -45,7 +45,7 @@ def load_randomForestClassifier(config, section):
         max_depth = config.getint(section, 'max_depth')
     if config.has_option(section, 'n_estimators'):
         n_estimators = config.getint(section, 'n_estimators')
-    return RandomForestClassifier(criterion='entropy', random_state=RandomState(seed), max_depth=max_depth,
+    return RandomForestClassifier(criterion='entropy', random_state=RandomState(__seed__), max_depth=max_depth,
                                   n_estimators=n_estimators)
 
 def load_logisticRegression(config, section):
@@ -103,9 +103,6 @@ def load_report(path):
     return text
 
 if __name__ == '__main__':
-    # set common path variables
-    region_keys = ['inner']
-
     # training/test data and output files
     label_file = 'data/input/SDS_PV2_combined/SDS_PV2_class_labels.txt'
     report_path = 'data/input/SDS_PV2_combined/reports'
@@ -121,11 +118,8 @@ if __name__ == '__main__':
              format(now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, 40*'-'),
              standard_out_file, 'a',False))
 
-    # static parameters
-    kfolds = 5
-    seed = 987654321
     # set the numpy random seed so results are reproducible
-    rs = RandomState(987654321)
+    rs = RandomState(__seed__)
 
     # partition the data
     pos_cases, neg_cases = wrangle.partion(label_data['doc_norm']==1, label_data, ratios=[0.8,0.2])
