@@ -10,9 +10,9 @@ RUN apt-get install -y python-scipy
 
 RUN pip install -r /arrc/requirements.txt
 
-EXPOSE 5000
-
 WORKDIR /arrc
 
-CMD python rs.py
+EXPOSE 5000
+
+CMD ["python", "rs.py"]
 
