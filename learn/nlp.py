@@ -13,7 +13,7 @@ from nltk.corpus import stopwords
 import re
 
 #load a sentence tokenizer, faster for many tokenizations
-sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+sent_tokenizer = nltk.data.load('file:./learn/english.pickle')
 
 def sentences(text):
     '''Uses /tokenizers/punkt/english tokenizer to create list of sentences from text'''

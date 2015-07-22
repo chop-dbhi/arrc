@@ -44,4 +44,4 @@ def classify():
 
 if __name__ == '__main__':
     configure_service('resources/config/app_config.cfg')
-    app.run()
+    app.run(host='0.0.0.0')
