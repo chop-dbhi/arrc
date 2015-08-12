@@ -1,18 +1,21 @@
 FROM ubuntu:14.04
 
-RUN apt-get update
+RUN apt-get update -qq
+RUN apt-get install -y python python-dev python-pip python-scipy
 
-RUN apt-get install -y python python-dev python-pip
+# Inline heavy dependencies to use container caching.
+RUN pip install numpy
+RUN pip install scikit-learn
+RUN pip install pandas
+RUN pip install nltk
 
 ADD . /arrc
-
-RUN apt-get install -y python-scipy
-
-RUN pip install -r /arrc/requirements.txt
-
 WORKDIR /arrc
+
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "rs.py"]
+ENTRYPOINT ["python", "rs.py"]
 
+CMD ["0.0.0.0"]
