@@ -11,8 +11,10 @@ from sklearn.naive_bayes import BernoulliNB
 import pandas as pd
 import numpy as np
 from numpy.random import RandomState
-from learn import wrangle, printers, nlp
+from learn import wrangle, printers
+from nlp import util
 import learn.sklearn_extensions as sklx
+from nltk.corpus import stopwords
 
 def load_report(path):
     f = open(path,'r')
@@ -25,19 +27,29 @@ def concatenate(d1,d2):
     d.update(d2)
     return d
 
+#custom preprocessor to keep some stop words
+english_stopwords = filter(lambda w: w not in ['no', 'not', 'under'], stopwords.words('english'))
+def text_preprocessor(text):
+    ct = util.replace_digits(text)
+    ct = util.replace_numerals(ct)
+    ct = util.replace_units(ct)
+    _words = [word.lower() for word in util.words(ct)]
+    _words = filter(lambda x: x not in english_stopwords and len(x)>=2, _words)
+    _words = util.porter_stem(_words)
+    return reduce(lambda x,y: '{0} {1}'.format(x,y), _words, "")
+
 def analyze_classifiers(region_key, classifiers, x_train, y_train, x_test, y_test, out_file):
     printers.printsf('{0}Analysis for {1} ear region{0}'.format(40*'-', region_key), out_file)
     for key,value in classifiers.items():
         clf = value[0] #the classifier
         usa = value[1] #use spare array
         parameters = value[2]
-        vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=nlp.text_preprocessor)
+        #vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=util.text_preprocessor)
+        vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=text_preprocessor)
         pipeline = (Pipeline(steps=[('vect', vectorizer),('clf',clf)]) if usa
                     else Pipeline(steps=[('vect', vectorizer),('sa',sklx.SparseToArray()),('clf',clf)]))
         gs = sklx.grid_analysis(pipeline,parameters, x_train, y_train)
         printers.print_grid_search_results(gs,key,out_file,x_test,y_test)
-
-
 
 if __name__ == '__main__':
     # set common path variables

@@ -60,4 +60,5 @@ target/
 .idea/
 resources/
 data/
-
+ipynbs/
+.DS_Store

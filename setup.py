@@ -8,13 +8,13 @@ config = {
     'description': 'Audiological radiology report classifier modeling and rest service.',
     'author': 'Aaron J. Masino',
     'url': 'URL to get it at.',
-    'download_url': 'Where to download it.',
+    'download_url': 'https://github.com/chop-dbhi/arrc',
     'author_email': 'masinoa@email.chop.edu',
     'version': '0.1',
-    'install_requires': ['numpy', 'sklearn', 'pandas', 'nltk','flask'],
+    'install_requires': ['numpy', 'scikit-learn', 'pandas', 'nltk','flask'],
     'packages': ['learn'],
     'scripts': [],
-    'name': 'aarc_service'
+    'name': 'aarc'
 }
 
 setup(**config)
