@@ -43,9 +43,9 @@ def analyze_classifiers(region_key, classifiers, x_train, y_train, x_test, y_tes
     for key,value in classifiers.items():
         clf = value[0] #the classifier
         usa = value[1] #use spare array
-        parameters = value[2]
-        #vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=util.text_preprocessor)
-        vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=text_preprocessor)
+        ubf = value[2] #use binary features (this is to support NB)
+        parameters = value[3]
+        vectorizer = CountVectorizer(input='content', decode_error='ignore', preprocessor=text_preprocessor, binary=ubf)
         pipeline = (Pipeline(steps=[('vect', vectorizer),('clf',clf)]) if usa
                     else Pipeline(steps=[('vect', vectorizer),('sa',sklx.SparseToArray()),('clf',clf)]))
         gs = sklx.grid_analysis(pipeline,parameters, x_train, y_train)
@@ -96,31 +96,38 @@ if __name__ == '__main__':
     feature_parameters  = {'vect__binary':(False, True),
                    'vect__ngram_range': ((1,1),(1,2),(1,3)),
                    'vect__analyzer' : ('word', 'char_wb')}
+    nb_feature_parameters  = {'vect__ngram_range': ((1,1),(1,2),(1,3)),
+                   'vect__analyzer' : ('word', 'char_wb')}
     use_spare_array = True
+    use_binary_features = False
     classifiers = ({
         'logistic_regression':(linear_model.LogisticRegression(),
                                use_spare_array,
                                concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
         'svm_linear':(svm.LinearSVC(tol=1e-6),
                       use_spare_array,
+                      use_binary_features,
                       concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
         'svm_gaussian':(svm.SVC(tol=1e-6, kernel='rbf'),
                         use_spare_array,
+                        use_binary_features,
                         concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1, 0.3, 1.0, 3.0],
                                                  'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
         'decision_tree':(tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed)),
                          not use_spare_array,
+                         use_binary_features,
                          concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5, 6, 7 , 8, 9, 10, 15, 20]})),
         'random_forest':(RandomForestClassifier(criterion='entropy', random_state=RandomState(seed)),
                          not use_spare_array,
+                         use_binary_features,
                          concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5],
                                                          'clf__n_estimators': [5, 25, 50, 100, 150, 200]})),
         'naive_bayes':(BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None),
                        use_spare_array,
+                       not use_binary_features,
                        {'vect__ngram_range':((1,1),(1,2),(1,3)),
                         'vect__analyzer':('word', 'char_wb')})
         })
-
 
     #analyze model performance for classifiers X regions
     #WARNING: This may run for hours (or even days) depending on the number of classifiers

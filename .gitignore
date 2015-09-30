@@ -65,3 +65,5 @@ resources/
 data/
 ipynbs/
 .DS_Store
+*.ipynb
+.ipynb_checkpoints/
