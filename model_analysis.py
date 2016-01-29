@@ -124,14 +124,17 @@ if __name__ == '__main__':
     if analyze_baseline:
 
         clf = linear_model.LogisticRegression(C=1000)
-        #clf = BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None)
+        clf = BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None)
 
-        usa = True  #use sparse array, should be false for NB classifier
-        binary_features = False #should be true for NB classifier
+        usa = False  #use sparse array, should be false for NB classifier
+        binary_features = True #should be true for NB classifier
+        apply_text_preprocessing = False
+        tpp = None
+        if apply_text_preprocessing: tpp = text_preprocessor
 
         #start with no regulariztion, unigrams and no text preprocessing
         vectorizer = CountVectorizer(input='content', decode_error='ignore', analyzer='word',
-                                     preprocessor=None, ngram_range=(1,1), stop_words=None, lowercase=False,
+                                     preprocessor=tpp, ngram_range=(1,1), stop_words=None, lowercase=False,
                                      binary=binary_features)
 
         pipeline = (Pipeline(steps=[('vect', vectorizer),('clf',clf)]) if usa
@@ -160,39 +163,40 @@ if __name__ == '__main__':
 
     if analyze_all_classifiers:
         # classifiers and parameters to consider for each region
-        feature_parameters  = {'vect_preprocessor':(None, text_preprocessor),
+        feature_parameters  = {'vect__preprocessor':(None, text_preprocessor),
                         'vect__binary':(False, True),
                        'vect__ngram_range': ((1,1),(1,2),(1,3)),
                        'vect__analyzer' : ('word', 'char_wb')}
         nb_feature_parameters  = {'vect__ngram_range': ((1,1),(1,2),(1,3)),
                        'vect__analyzer' : ('word', 'char_wb')}
         use_spare_array = True
-        use_binary_features = False
+        use_binary_features = True
         classifiers = ({
             'logistic_regression':(linear_model.LogisticRegression(),
                                    use_spare_array,
+                                   not use_binary_features,
                                    concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'svm_linear':(svm.LinearSVC(tol=1e-6),
                           use_spare_array,
-                          use_binary_features,
+                          not use_binary_features,
                           concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'svm_gaussian':(svm.SVC(tol=1e-6, kernel='rbf'),
                             use_spare_array,
-                            use_binary_features,
+                            not use_binary_features,
                             concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1, 0.3, 1.0, 3.0],
                                                      'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'decision_tree':(tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed)),
                              not use_spare_array,
-                             use_binary_features,
+                             not use_binary_features,
                              concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5, 6, 7 , 8, 9, 10, 15, 20]})),
             'random_forest':(RandomForestClassifier(criterion='entropy', random_state=RandomState(seed)),
                              not use_spare_array,
-                             use_binary_features,
+                             not use_binary_features,
                              concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5],
                                                              'clf__n_estimators': [5, 25, 50, 100, 150, 200]})),
             'naive_bayes':(BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None),
                            use_spare_array,
-                           not use_binary_features,
+                           use_binary_features,
                            {'vect__ngram_range':((1,1),(1,2),(1,3)),
                             'vect__analyzer':('word', 'char_wb')})
         })
