@@ -56,8 +56,8 @@ def analyze_classifiers(region_key, classifiers, x_train, y_train, x_test, y_tes
 if __name__ == '__main__':
 
     use_finding_impression_only = True
-    analyze_baseline = False
-    analyze_all_classifiers = True
+    analyze_baseline = True
+    analyze_all_classifiers = False
 
     # static parameters
     kfolds = 5
@@ -122,7 +122,7 @@ if __name__ == '__main__':
 
         usa = True  #use sparse array, should be false for NB classifier
         binary_features = False  #should be true for NB classifier
-        apply_text_preprocessing = True
+        apply_text_preprocessing = False
         tpp = None
         if apply_text_preprocessing: tpp = text_preprocessor
 
@@ -169,30 +169,30 @@ if __name__ == '__main__':
             'logistic_regression':(linear_model.LogisticRegression(),
                                    use_spare_array,
                                    not use_binary_features,
-                                   concatenate(feature_parameters, {'clf__C': [1/x for x in [1/1000., 1/100.]]})),
-            # 'svm_linear':(svm.LinearSVC(tol=1e-6),
-            #               use_spare_array,
-            #               not use_binary_features,
-            #               concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
-            # 'svm_gaussian':(svm.SVC(tol=1e-6, kernel='rbf'),
-            #                 use_spare_array,
-            #                 not use_binary_features,
-            #                 concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1, 0.3, 1.0, 3.0],
-            #                                          'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
-            # 'decision_tree':(tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed)),
-            #                  not use_spare_array,
-            #                  not use_binary_features,
-            #                  concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5, 6, 7 , 8, 9, 10, 15, 20]})),
-            # 'random_forest':(RandomForestClassifier(criterion='entropy', random_state=RandomState(seed)),
-            #                  not use_spare_array,
-            #                  not use_binary_features,
-            #                  concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5],
-            #                                                  'clf__n_estimators': [5, 25, 50, 100, 150, 200]})),
-            # 'naive_bayes':(BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None),
-            #                use_spare_array,
-            #                use_binary_features,
-            #                {'vect__ngram_range':((1,1),(1,2),(1,3)),
-            #                 'vect__analyzer':('word', 'char_wb')})
+                                   concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+            'svm_linear':(svm.LinearSVC(tol=1e-6),
+                          use_spare_array,
+                          not use_binary_features,
+                          concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+            'svm_gaussian':(svm.SVC(tol=1e-6, kernel='rbf'),
+                            use_spare_array,
+                            not use_binary_features,
+                            concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1, 0.3, 1.0, 3.0],
+                                                     'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+            'decision_tree':(tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed)),
+                             not use_spare_array,
+                             not use_binary_features,
+                             concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5, 6, 7 , 8, 9, 10, 15, 20]})),
+            'random_forest':(RandomForestClassifier(criterion='entropy', random_state=RandomState(seed)),
+                             not use_spare_array,
+                             not use_binary_features,
+                             concatenate(feature_parameters,{'clf__max_depth': [2, 3, 4, 5],
+                                                             'clf__n_estimators': [5, 25, 50, 100, 150, 200]})),
+            'naive_bayes':(BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None),
+                           use_spare_array,
+                           use_binary_features,
+                           {'vect__ngram_range':((1,1),(1,2),(1,3)),
+                            'vect__analyzer':('word', 'char_wb')})
         })
 
         #analyze model performance for classifiers X regions
