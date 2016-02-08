@@ -1,7 +1,7 @@
 __author__ = 'Aaron J. Masino'
 
 import numpy as np
-from metrics import PerformanceMetrics
+from learn.metrics import PerformanceMetrics
 import sklearn
 
 def printsf(text, out_file=None, fmode = 'a', print_to_screen=True, carriage_returns=1):
