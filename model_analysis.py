@@ -161,8 +161,6 @@ if __name__ == '__main__':
                         'vect__binary':(False, True),
                        'vect__ngram_range': ((1,1),(1,2),(1,3)),
                        'vect__analyzer' : ('word', 'char_wb')}
-        feature_parameters  = {'vect__ngram_range': ((1,1),(1,2),(1,3)),
-                       }
         nb_feature_parameters  = {'vect__ngram_range': ((1,1),(1,2),(1,3)),
                        'vect__analyzer' : ('word', 'char_wb')}
         use_spare_array = True
