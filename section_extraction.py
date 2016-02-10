@@ -76,7 +76,7 @@ def load_report(path):
 
 if __name__ == '__main__':
     # set common path variables
-    report_path = './data/input/SDS_PV2_combined/reports_complete'
+    report_path = './data/input/SDS_PV2_combined/reports_single'
     label_file = './data/input/SDS_PV2_combined/SDS_PV2_class_labels.txt'
     label_data = pd.read_csv(label_file)
 
