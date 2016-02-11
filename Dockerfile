@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
 RUN apt-get update -qq
-RUN apt-get install -y python python-dev python-pip python-scipy
+RUN apt-get install -y python python-dev python-pip python-scipy pkg-config
 
 # Inline heavy dependencies to use container caching.
 RUN pip install numpy
