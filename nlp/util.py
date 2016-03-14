@@ -11,6 +11,7 @@ import nltk.data
 from nltk.tokenize import regexp_tokenize
 from nltk.corpus import stopwords
 import re
+from functools import reduce
 
 #load a sentence tokenizer, faster for many tokenizations
 sent_tokenizer = nltk.data.load('file:./learn/english.pickle')

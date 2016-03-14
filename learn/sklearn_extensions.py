@@ -13,7 +13,7 @@ def grid_analysis(pipeline, parameters, train_input, train_labels, cv = None):
     tic = time.clock()
     grid_search.fit(train_input,train_labels)
     toc = time.clock()
-    print "Grid search complete in {0} sec".format(toc-tic)
+    print("Grid search complete in {0} sec".format(toc-tic))
     return grid_search
 
 class SparseToArray:

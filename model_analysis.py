@@ -17,8 +17,7 @@ from nlp import util
 import learn.sklearn_extensions as sklx
 from nltk.corpus import stopwords
 from learn.metrics import PerformanceMetrics
-from os import listdir
-from os.path import isfile, join
+from functools import reduce
 
 def load_report(path):
     f = open(path,'r')
@@ -85,11 +84,7 @@ if __name__ == '__main__':
 
 
     # read data
-    n = 4
-    if(use_finding_impression_only): n = 7
-    pids_from_files = [f[0:-n] for f in listdir(report_path) if isfile(join(report_path,f)) and f.endswith('.txt')]
-    all_label_data = pd.read_csv(label_file)
-    label_data = all_label_data[all_label_data['pid'].isin(pids_from_files)]
+    label_data = pd.read_csv(label_file)
     region_keys = label_data.columns[2:6]
     miss_labeled_file = output_path.format('SDS_PV2_missed_.txt')
     if not os.path.exists(os.path.dirname(standard_out_file)):
@@ -124,10 +119,10 @@ if __name__ == '__main__':
     if analyze_baseline:
 
         clf = linear_model.LogisticRegression(C=1000)
-        clf = BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None)
+        #clf = BernoulliNB(alpha=1.0, binarize=None, fit_prior=True, class_prior=None)
 
-        usa = False  #use sparse array, should be false for NB classifier
-        binary_features = True #should be true for NB classifier
+        usa = True  #use sparse array, should be false for NB classifier
+        binary_features = False #should be true for NB classifier
         apply_text_preprocessing = False
         tpp = None
         if apply_text_preprocessing: tpp = text_preprocessor
@@ -163,7 +158,7 @@ if __name__ == '__main__':
 
     if analyze_all_classifiers:
         # classifiers and parameters to consider for each region
-        feature_parameters  = {'vect__preprocessor':(None, text_preprocessor),
+        feature_parameters  = {
                         'vect__binary':(False, True),
                        'vect__ngram_range': ((1,1),(1,2),(1,3)),
                        'vect__analyzer' : ('word', 'char_wb')}
@@ -175,16 +170,16 @@ if __name__ == '__main__':
             'logistic_regression':(linear_model.LogisticRegression(),
                                    use_spare_array,
                                    not use_binary_features,
-                                   concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+                                   concatenate(feature_parameters, {'clf__C': [1/x for x in [0.01, 0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'svm_linear':(svm.LinearSVC(tol=1e-6),
                           use_spare_array,
                           not use_binary_features,
-                          concatenate(feature_parameters, {'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+                          concatenate(feature_parameters, {'clf__C': [1/x for x in [0.01, 0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'svm_gaussian':(svm.SVC(tol=1e-6, kernel='rbf'),
                             use_spare_array,
                             not use_binary_features,
-                            concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1, 0.3, 1.0, 3.0],
-                                                     'clf__C': [1/x for x in [0.1, 0.3, 1.0, 3.0, 10.0]]})),
+                            concatenate(feature_parameters, {'clf__gamma': [.01, .03, 0.1],
+                                                     'clf__C': [1/x for x in [0.01, 0.1, 0.3, 1.0, 3.0, 10.0]]})),
             'decision_tree':(tree.DecisionTreeClassifier(criterion='entropy', random_state=RandomState(seed)),
                              not use_spare_array,
                              not use_binary_features,
@@ -204,7 +199,8 @@ if __name__ == '__main__':
         #analyze model performance for classifiers X regions
         #WARNING: This may run for hours (or even days) depending on the number of classifiers
         #and parameters considered
-        for key in region_keys:
+        #for key in region_keys:
+        for key in ['mastoid']:
             y_train = train_labels[key]
             y_test = test_labels[key]
             analyze_classifiers(key, classifiers, train_reports, y_train, test_reports, y_test, standard_out_file)

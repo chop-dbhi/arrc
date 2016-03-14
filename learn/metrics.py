@@ -81,22 +81,22 @@ def printPerformanceMetrics(y_actual, y_predicted):
     recall = tp / (tp + fn) where tp is same as precision, and fn is the number of false negatives is the predicted labels
     f1 = 2 * (precision * recall) / (precision + recall)'''
     pm = PerformanceMetrics(y_actual, y_predicted)
-    print 'Accuracy:\t\t\t{0}'.format(pm.accuracy)
-    print 'F1-Score:\t\t\t{0}'.format(pm.f1)
-    print 'PPV/Precision tp/pp:\t\t{0}'.format(pm.ppv)
-    print 'NPV tn/pn:\t\t\t{0}'.format(pm.npv)
-    print 'Sensitivity/Recall tp/[tp+fn]:\t{0}'.format(pm.recall)
-    print 'Specificity tn/[tn+fp]:\t\t{0}'.format(pm.specificity)
+    print('Accuracy:\t\t\t{0}'.format(pm.accuracy))
+    print('F1-Score:\t\t\t{0}'.format(pm.f1))
+    print('PPV/Precision tp/pp:\t\t{0}'.format(pm.ppv))
+    print('NPV tn/pn:\t\t\t{0}'.format(pm.npv))
+    print('Sensitivity/Recall tp/[tp+fn]:\t{0}'.format(pm.recall))
+    print('Specificity tn/[tn+fp]:\t\t{0}'.format(pm.specificity))
     return pm
 
 def printKFoldPerformanceMetrics(performanceMetrics):
     pm = KFoldPerformanceMetrics(performanceMetrics)
-    print 'Accuracy:\t\t\t{0}'.format(pm.accuracy_mean)
-    print 'F1-Score:\t\t\t{0}'.format(pm.f1_mean)
-    print 'PPV/Precision tp/pp:\t\t{0}'.format(pm.ppv_mean)
-    print 'NPV tn/pn:\t\t\t{0}'.format(pm.npv_mean)
-    print 'Sensitivity/Recall tp/[tp+fn]:\t{0}'.format(pm.recall_mean)
-    print 'Specificity tn/[tn+fp]:\t\t{0}'.format(pm.specificity_mean)
+    print('Accuracy:\t\t\t{0}'.format(pm.accuracy_mean))
+    print('F1-Score:\t\t\t{0}'.format(pm.f1_mean))
+    print('PPV/Precision tp/pp:\t\t{0}'.format(pm.ppv_mean))
+    print('NPV tn/pn:\t\t\t{0}'.format(pm.npv_mean))
+    print('Sensitivity/Recall tp/[tp+fn]:\t{0}'.format(pm.recall_mean))
+    print('Specificity tn/[tn+fp]:\t\t{0}'.format(pm.specificity_mean))
     return pm
 
 def learningCurves(predictor, X_train, y_train, X_other, y_other, minI=0):
