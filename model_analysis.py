@@ -57,8 +57,8 @@ def analyze_classifiers(region_key, classifiers, x_train, y_train, x_test, y_tes
 if __name__ == '__main__':
 
     use_finding_impression_only = True
-    analyze_baseline = False
-    analyze_all_classifiers = True
+    analyze_baseline = True
+    analyze_all_classifiers = False
 
     # static parameters
     kfolds = 5
@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
     # print partition stats
     printers.printsf('{0}Data Partition Stats{0}'.format(40*'-'), standard_out_file)
+    printers.print_data_stats(train_labels['doc_norm'], test_labels['doc_norm'], '{0}Document{0}'.format(40*'-'),standard_out_file)
     for key in region_keys:
         printers.print_data_stats(train_labels[key], test_labels[key],
                                   '{0}{1}{0}'.format(40*'-', key),standard_out_file)
