@@ -7,7 +7,7 @@ The [*model_analysis.py*](https://github.com/chop-dbhi/arrc/blob/master/model_an
 As written, the [*model_analysis.py*](https://github.com/chop-dbhi/arrc/blob/master/model_analysis.py) file requries a label file that contains column headers *pid*, *doc_norm*, *inner*, *middle*, *outer*, and *mastoid* in that order. The *pid* column is a unique identifier for that corresponds to a text report file named *pid.txt*. The *doc_norm* column is binary valued and indicates if *pid.txt* is contains NO abnormalities (0) or at least one abnormality (1). The *inner*, *middle*, *outer*, and *mastoid* columns are also binary valued and indicate if *pid.txt* contains an no abnormality (0) or at least one abnormality (1) in the inner, middle, outer ear or mastoid regions respectively. 
 
 ### Training & Test Data
-Training & test data can be obtained from the [AudGenDB project](http://audgendb.chop.edu/) via the [AudGenDB application](https://audgendb.chop.edu/app/login/). 
+Training & test data can be obtained from the [AudGenDB project](http://audgendb.chop.edu/) via the [AudGenDB application](https://audgendb.chop.edu/app2/login/). 
 
 ## Model Persistence 
 To avoid re-training the classification models every time the REST service is started (see below) the selected classification models can be persisted via pickling. The [*model_persist.py*](https://github.com/chop-dbhi/arrc/blob/master/model_persist.py) will train and pickle the models using the hyper-parameters specified in the *INSTALL_DIR/resources/config/models.ini* file. See this [sample file](https://github.com/chop-dbhi/arrc/wiki/Sample-models.ini). 
